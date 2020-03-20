@@ -230,3 +230,31 @@ function combineReducers(reducers){
       (...args)=> a(b(...args))
     )
  }
+
+export function formatNumber(value, allowDot, max, min) {
+  if (allowDot) {
+    var dotIndex = value.indexOf('.')
+    if (dotIndex > -1) {
+      value = value.slice(0, dotIndex + 1) + value.slice(dotIndex).replace(/\./g, '')
+    }
+  } else {
+    value = value.split('.')[0]
+  }
+  var minusIndex = value.indexOf('-')
+  if (minusIndex > -1) {
+    value = value.slice(0, minusIndex + 1) + value.slice(minusIndex).replace(/-/g, '')
+  }
+  if (minusIndex > 0) {
+    value = value.split('-')[0]
+  }
+  var regExp = allowDot ? /[^-0-9.]/g : /\D/g
+  value = value.replace(regExp, '')
+  if (typeof max === 'number' && value > max) {
+    value = max
+  }
+  if (typeof min === 'number' && value < min) {
+    value = min
+  }
+  return value
+}
+
