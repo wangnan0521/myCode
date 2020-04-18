@@ -257,4 +257,26 @@ export function formatNumber(value, allowDot, max, min) {
   }
   return value
 }
+//自定义全局监听事件
+//创建全局事件
+var _wr = function(type) {
+   var orig = history[type];
+   return function() {
+       var rv = orig.apply(this, arguments);
+      var e = new Event(type);
+       e.arguments = arguments;
+       window.dispatchEvent(e);
+       return rv;
+   };
+};
+//重写方法
+ history.pushState = _wr('pushState');
+ history.replaceState = _wr('replaceState');
+//实现监听
+window.addEventListener('replaceState', function(e) {
+  console.log('THEY DID IT AGAIN! replaceState 111111');
+});
+window.addEventListener('pushState', function(e) {
+  console.log('THEY DID IT AGAIN! pushState 2222222');
+});
 
